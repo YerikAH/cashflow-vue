@@ -1,13 +1,67 @@
 <template lang="">
   <button @click="showModal = true">Add movement</button>
   <teleport to="#app">
-    <div v-show="showModal"></div>
+    <Modal v-show="showModal" @close="showModal = false">
+      <form @submit.prevent="submit">
+        <div class="field">
+          <label>Title</label>
+          <input type="text" v-model="title" />
+        </div>
+        <div class="field">
+          <label>Amount</label>
+          <input type="number" v-model="amount" />
+        </div>
+        <div class="field">
+          <label>Description</label>
+          <textarea rows="4" v-model="description"></textarea>
+        </div>
+        <div class="field">
+          <label>Movement type</label>
+          <label class="radio-label">
+            <input type="radio" v-model="movementType" value="Enter" />
+            <span>Entrance</span>
+          </label>
+          <label class="radio-label">
+            <input type="radio" v-model="movementType" value="Spend" />
+            <span>Spend</span>
+          </label>
+        </div>
+        <div class="action">
+          <button>add movement</button>
+        </div>
+      </form>
+    </Modal>
   </teleport>
 </template>
+
 <script setup>
-import { ref } from "vue";
+import { ref, defineEmits } from "vue";
+import Modal from "./Modal.vue";
+
 const showModal = ref(false);
+const title = ref("");
+const amount = ref(0);
+const description = ref("");
+const movementType = ref("Enter");
+
+const emit = defineEmits(["create"]);
+
+const submit = () => {
+  showModal.value = !showModal.value;
+  emit("create", {
+    title: title.value,
+    description: description.value,
+    amount: movementType.value === "Enter" ? amount.value : -amount.value,
+    time: new Date(),
+    id: new Date(),
+  });
+  title.value = "";
+  description.value = "";
+  amount.value = 0;
+  movementType.value = "Enter";
+};
 </script>
+
 <style scoped>
 button {
   color: white;
@@ -18,6 +72,11 @@ button {
   padding: 24px 60px;
   border-radius: 60px;
   box-sizing: border-box;
+}
+form {
+  font-size: 1.24rem;
+  width: 100%;
+  background: #fff;
 }
 
 form {

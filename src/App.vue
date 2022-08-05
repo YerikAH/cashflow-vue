@@ -2,7 +2,7 @@
   <div>
     <Suspense>
       <template #default><Home /></template>
-      <template #fallback> <SplashScreenVue /></template>
+      <template #fallback><SplashScreenVue /></template>
     </Suspense>
   </div>
 </template>

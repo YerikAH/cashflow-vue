@@ -6,7 +6,7 @@
     <template #resume>
       <Resume
         :label="label"
-        :total-amount="1000000"
+        :total-amount="totalAmount"
         :amount="amount"
         :total-label="'Ahorro total'"
       >
@@ -61,7 +61,13 @@ export default {
         }, 0);
       });
     },
+    totalAmount() {
+      return this.movements.reduce((suma, m) => {
+        return suma + m.amount;
+      }, 0);
+    },
   },
+
   mounted() {
     const movements = JSON.parse(localStorage.getItem("movements"));
     if (Array.isArray(movements)) {
